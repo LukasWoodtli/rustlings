@@ -21,7 +21,6 @@ enum IntoColorError {
     IntConversion,
 }
 
-// I AM NOT DONE
 
 // Your task is to complete this implementation
 // and return an Ok result of inner type Color.
@@ -32,10 +31,18 @@ enum IntoColorError {
 // but the slice implementation needs to check the slice length!
 // Also note that correct RGB color values must be integers in the 0..=255 range.
 
+
 // Tuple implementation
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = IntoColorError;
     fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        let r = u8::try_from(tuple.0).map_err(|e| IntoColorError::IntConversion)?;
+        let g = u8::try_from(tuple.1).map_err(|e| IntoColorError::IntConversion)?;
+        let b = u8::try_from(tuple.2).map_err(|e| IntoColorError::IntConversion)?;
+        return Ok(Color{
+            red: r,
+            green: g,
+            blue: b});
     }
 }
 
@@ -43,6 +50,13 @@ impl TryFrom<(i16, i16, i16)> for Color {
 impl TryFrom<[i16; 3]> for Color {
     type Error = IntoColorError;
     fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        let r = u8::try_from(arr[0]).map_err(|e| IntoColorError::IntConversion)?;
+        let g = u8::try_from(arr[1]).map_err(|e| IntoColorError::IntConversion)?;
+        let b = u8::try_from(arr[2]).map_err(|e| IntoColorError::IntConversion)?;
+        return Ok(Color{
+            red: r,
+            green: g,
+            blue: b});
     }
 }
 
@@ -50,6 +64,17 @@ impl TryFrom<[i16; 3]> for Color {
 impl TryFrom<&[i16]> for Color {
     type Error = IntoColorError;
     fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        let d: Vec<&i16> = slice.iter().collect();
+        if d.len() != 3 {
+            return Err(IntoColorError::BadLen);
+        }
+        let r = u8::try_from(*d[0]).map_err(|e| IntoColorError::IntConversion)?;
+        let g = u8::try_from(*d[1]).map_err(|e| IntoColorError::IntConversion)?;
+        let b = u8::try_from(*d[2]).map_err(|e| IntoColorError::IntConversion)?;
+        return Ok(Color{
+            red: r,
+            green: g,
+            blue: b});
     }
 }
 
